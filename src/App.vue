@@ -6,8 +6,14 @@
 
   </header>
 
-  <main class="bg-dark w-100 py-5 px-3">
-    <CharacterCard />
+  <main class="bg-dark d-flex justify-content-center w-100 py-5 px-3">
+    <div class=" d-flex flex-wrap justify-content-center  w-100"
+      style="max-width: 2080px;">
+      <CharacterCard class="m-3"
+        v-for="character of characters"
+        :key="character.id"
+        :character="character" />
+    </div>
   </main>
 </template>
 
@@ -23,9 +29,10 @@ async function getCharactersPage() {
     if (!response.ok) {
       throw new Error('Network response was not ok ' + response.statusText);
     }
-    console.log(response);
+    const data = await response.json()
+    console.log(data);
 
-    return response;
+    return data.results;
   } catch (error) {
     console.error('There was a problem with your fetch operation:', error);
   }
