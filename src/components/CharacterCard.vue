@@ -2,12 +2,12 @@
   <div class="card mb-3 text-bg-secondary border-0"
     style="width: 640px; ">
     <div class="row g-0">
-      <div class="col-4">
+      <div class="col-sm-4">
         <img :src="character.image"
           class="img-fluid rounded-start h-100 w-100"
           :alt="character.name">
       </div>
-      <div class="col-8">
+      <div class="col-sm-8">
         <div class="card-body">
           <h3 class="card-title fw-bolder mb-1 text-nowrap overflow-hidden">{{ character.name }}</h3>
           <h6 class="card-title fw-bold mb-4">
@@ -26,7 +26,7 @@
           </h6>
 
           <h6 class="card-subtitle text-secondary-emphasis mb-1">Last known location:</h6>
-          <h5 class="fw-normal card-text mb-4">{{ character.location.name }}</h5>
+          <h5 class="fw-normal card-text mb-4">{{ character.location?.name }}</h5>
 
           <h6 class="card-subtitle text-secondary-emphasis mb-1">First seen:</h6>
           <h5 class="fw-normal card-text">{{ firstSeen }}</h5>
@@ -44,7 +44,7 @@ const props = defineProps({
   character: {
     default: {
       id: 0,
-      name: '',
+      name: 'none',
       status: '',
       species: '',
       location: {
@@ -66,7 +66,6 @@ async function getFirstSeenName() {
       throw new Error('Network response was not ok ' + response.statusText);
     }
     const data = await response.json()
-    console.log(data);
 
     return data.name;
   } catch (error) {
