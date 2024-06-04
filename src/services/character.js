@@ -1,7 +1,15 @@
+const base = 'https://rickandmortyapi.com/api/character'
+
 class Character {
-  async getCharactersPage(page) {
+  async getCharactersPage(page, name, status) {
+    let addReq = ''
+
+    if (page > 0) addReq = '/?page=' + page
+    if (name && name.length) addReq = '&name=' + name
+    if (status && status.length) addReq = '&status=' + status
+
     try {
-      const response = await fetch(page)
+      const response = await fetch(base + addReq)
       if (!response.ok) {
         throw new Error('Network response was not ok ' + response.status)
       }
