@@ -5,7 +5,8 @@
         "./src/*"
       ]
     },
-    "outDir": "docs"
+    "outDir": "docs",
+    "baseUrl": "./"
   },
   "exclude": [
     "node_modules",
