@@ -1,6 +1,6 @@
 <template>
   <div class="card mb-3 text-bg-secondary border-0"
-    style="width: 640px; ">
+    style="width: 600px; ">
     <div class="row g-0">
       <div class="col-sm-4">
         <img :src="character.image"

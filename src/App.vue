@@ -5,13 +5,14 @@
     </h1>
   </header>
 
-  <main class="bg-dark d-flex align-items-center flex-column w-100 py-5 px-3">
+  <main class="bg-dark d-flex align-items-center flex-column w-100 py-5">
     <MyPagination />
     <div class="mb-3 fs-5 text-white d-flex">
       <label for="name"
         class="form-label">Character name:</label>
       <div class="ms-3 me-5">
-        <input type="text"
+        <input v-model="name"
+          type="text"
           class="form-control "
           id="name"
           placeholder="Rick">
@@ -20,7 +21,6 @@
       Status:
       <select v-model="status"
         class="form-select ms-3"
-        multiple
         aria-label="status">
         <option value="alive">Alive</option>
         <option value="dead">Dead</option>
@@ -42,23 +42,35 @@
 
 <script setup>
 import CharacterCard from "@/components/CharacterCard.vue";
-import { onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { useAppStore } from "@/stores/app";
-import MyPagination from "./components/MyPagination.vue";
+import MyPagination from "@/components/MyPagination.vue";
 
-const currentPage = ref('https://rickandmortyapi.com/api/character?page=2')
+const currentPage = ref('https://rickandmortyapi.com/api/character?page=2&status=dead&status=unknown')
 const appStore = useAppStore()
 const name = ref('')
-const status = ref([''])
+const status = ref('')
 
+const filter = computed(() => {
+  let result = ''
 
-onBeforeMount(async () => {
-  const { info, results } = await appStore.getCharactersPage(currentPage.value)
+  if (name.value.length) result += '&name=' + name.value
+  if (status.value.length) result += '&status=' + status.value
+
+  return result
+})
+
+async function getCharacters() {
+  const { info, results } = await appStore.getCharactersPage(currentPage.value + filter.value)
 
   console.log(results)
   appStore.next = info.next
   appStore.prev = info.prev
   appStore.characters = results
+}
+
+onBeforeMount(() => {
+  getCharacters()
 })
 
 </script>
