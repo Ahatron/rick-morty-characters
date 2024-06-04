@@ -3,11 +3,11 @@
     <ul class="pagination">
       <li class="page-item"><a class="page-link"
           href="#"
-          @click="appStore.goPrev">Previous</a></li>
+          @click="appStore.getCharactersPage(-1)">Previous</a></li>
 
       <li class="page-item"><a class="page-link"
           href="#"
-          @click="appStore.goNext">Next</a></li>
+          @click="appStore.getCharactersPage(1)">Next</a></li>
     </ul>
   </nav>
 </template>

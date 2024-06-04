@@ -2,41 +2,59 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { character } from '@/services/character'
 
-let currentPage = 1
+let page = 1
+let totalPages = 1
+const params = { page }
 
 export const useAppStore = defineStore('app-store', () => {
-  const totalPages = ref(0)
   const characters = ref()
   const name = ref('')
   const status = ref('none')
+  const isFiltered = ref(false)
 
-  async function getCharactersPage() {
-    const { info, results } = await character.getCharactersPage(currentPage)
+  function setValues(value) {
+    if (!value) return
 
-    console.log(results)
-    totalPages.value = info.pages
+    const { info, results } = value
+    totalPages = info.pages
     characters.value = results
+  }
+
+  async function getCharactersPage(step) {
+    if (isFiltered.value) {
+      params.name = name.value
+      params.status = status.value
+    }
+
+    if (page + step <= 0) page = 1
+    else if (page + step <= totalPages) page += step
+    else page = totalPages
+
+    params.page = page
+
+    const res = await character.getCharactersPage(params)
+
+    console.log(res)
+    setValues(res)
   }
 
   async function applyFilter() {
-    const res = await character.getCharactersPage(currentPage, name.value, status.value)
-
-    if (!res) return
-
-    const { info, results } = res
-    totalPages.value = info.pages
-    console.log(results)
-    characters.value = results
+    page = 1
+    isFiltered.value = true
+    getCharactersPage(0)
   }
 
   async function cleanFilter() {
+    isFiltered.value = false
+
     name.value = ''
     status.value = 'none'
+    params.name = ''
+    params.status = ''
+    const res = await character.getCharactersPage({ page: 1 })
+    console.log(res)
 
-    const { info, results } = await character.getCharactersPage(1)
-    totalPages.value = info.pages
-    console.log(results)
-    characters.value = results
+    setValues(res)
   }
 
   return {

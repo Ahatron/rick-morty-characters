@@ -1,12 +1,11 @@
 const base = 'https://rickandmortyapi.com/api/character'
 
 class Character {
-  async getCharactersPage(page, name, status) {
-    let addReq = ''
+  async getCharactersPage({ page, name, status }) {
+    let addReq = '/?page=' + page
 
-    if (page > 0) addReq = '/?page=' + page
-    if (name && name.length) addReq = '&name=' + name
-    if (status && status.length) addReq = '&status=' + status
+    if (name && name.length) addReq += '&name=' + name
+    if (status && status !== 'none' && status.length) addReq += '&status=' + status
 
     try {
       const response = await fetch(base + addReq)
